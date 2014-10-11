@@ -17,9 +17,15 @@ int main(int argc, _TCHAR* argv[])
 	ptr = std::bind(&Task::ThirdTask, Tasks, 0, "Strangers");
 	Pool1+=ptr;
 	Pool1 + ptr;
+<<<<<<< HEAD
 	ptr = std::bind(&Task::FiveTask, Tasks, 0, "Strangers");
 	Pool1.push_back(ptr, 10);
 	Pool1.Wait();
+=======
+	Pool1.Wait();
+	Sleep(15000);
+
+>>>>>>> fb87ec89746c490ba2374ec5de78bf7d07ddd108
 	return 0;
 }
 
