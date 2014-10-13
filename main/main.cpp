@@ -4,7 +4,7 @@
 
 
 
-int main(int argc, _TCHAR* argv[])
+int main()
 {
 	Task Tasks;
 	typedef void func_type;
@@ -19,8 +19,7 @@ int main(int argc, _TCHAR* argv[])
 	Pool1 + ptr;
 	ptr = std::bind(&Task::FiveTask, Tasks, 0, "Strangers");
 	Pool1.push_back(ptr, 10);
-	Pool1.Wait();
-	Pool1.GetThreadCount();
+	Sleep(10000);
 	return 0;
 }
 

@@ -27,7 +27,7 @@ void Task::FirstTask(int k, double s)
  void Task::FiveTask(int k, std::string u)
  {
 	 std::cout << "Five!" << std::endl;
-	 Sleep(1000);
+	 Sleep(10000);
 	 std::cout << "Five is ended!" << std::endl;
 	 return;
  }

@@ -1,9 +1,7 @@
 #pragma once
 
-#include "targetver.h"
-#include <stdio.h>
-#include <tchar.h>
 #include "windows.h"
+#include "targetver.h"
 #include <iostream>
 #include <vector>
 #include <map>

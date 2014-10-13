@@ -1,70 +1,64 @@
 template<typename func_type> class ThreadsPool
 {
-	//std::map <int,std::shared_ptr<boost::thread>> m_treads;
-	std::multimap <int, std::function<func_type()> > functionVector;
-	int treadCount = 0;
+	std::multimap <int, std::function<func_type()> > functionMap;
+	int threadCount = 0;
 	int poolSize = 2;
-	void Handler(std::function<func_type()>,int k);
-	void Start();
+	void Handler();
+	void Start(int size );
 
 public:
 	std::mutex taskLock;
 	int getPoolSize();
 	void setPoolSize(int);
 	void push_back(std::function<func_type()> , int priority = 0);
-	void Wait();
-	void GetThreadCount();
+	int GetThreadCount();
 	const ThreadsPool<func_type>& operator+=(std::function<func_type()> f);
 	const ThreadsPool<func_type>& operator+(std::function<func_type()> f);
 	ThreadsPool();
 };
 
 
-template<typename func_type>
-void ThreadsPool<func_type>::Handler(std::function<func_type()> ptr, int k)
-{
-	ptr();
-	taskLock.lock();
-	treadCount--;
-	taskLock.unlock();
-}
 
 template<typename func_type>
-void ThreadsPool<func_type>::Start()
+void ThreadsPool<func_type>::Handler()
 {
 	while (true)
 	{
-		while (!functionVector.empty())
+		taskLock.lock();
+		auto functionIt = functionMap.begin();
+		if (functionIt == functionMap.end())
 		{
-			taskLock.lock();
-			if ((treadCount < poolSize))
-			{
-				std::function<func_type()> ptr;
-				std::multimap <int, std::function<func_type()>>::iterator it;
-				it = functionVector.begin();
-				ptr = (*it).second;
-				functionVector.erase(it);
-				treadCount++;
-				auto tread = std::make_shared<boost::thread>(&ThreadsPool::Handler, this, ptr, treadCount);
-				taskLock.unlock();
-			}
-			else taskLock.unlock();
+			taskLock.unlock();
+			return;
 		}
+		auto functionPtr = functionIt->second;
+		functionMap.erase(functionIt);
+		threadCount++;
+		taskLock.unlock();
+		functionPtr();
+		threadCount--;
 	}
+}
+
+template<typename func_type>
+void ThreadsPool<func_type>::Start(int size)
+{
+	for (int i = 0; i < size; i++)
+	boost::thread t1(&ThreadsPool<func_type>::Handler, this);
 }
 
 template<typename func_type>
 int ThreadsPool<func_type>::getPoolSize()
 {
-	std::cout << "Pool size is " << poolSize << std::endl;
 	return poolSize;
 }
 
 template<typename func_type>
-void ThreadsPool<func_type>::setPoolSize(int k)
+void ThreadsPool<func_type>::setPoolSize(int size)
 {
 	taskLock.lock();
-	poolSize = k;
+	Start(size-poolSize)
+	poolSize = size;
 	taskLock.unlock();
 }
 
@@ -72,21 +66,14 @@ template<typename func_type>
 void ThreadsPool<func_type>::push_back(std::function<func_type()> f, int priority = 0)
 {
 	taskLock.lock();
-	functionVector.insert(std::make_pair(-priority, f));
+	functionMap.insert(std::make_pair(-priority, f));
 	taskLock.unlock();
 }
 
 template<typename func_type>
-void ThreadsPool<func_type>::Wait()
+int ThreadsPool<func_type>::GetThreadCount()
 {
-	while (!functionVector.empty() || treadCount);
-}
-
-template<typename func_type>
-void ThreadsPool<func_type>::GetThreadCount()
-{
-	std::cout << std::endl;
-	std::cout << treadCount << " thread(s) are running now" << std::endl;
+	return threadCount;
 }
 
 template<typename func_type>
@@ -106,7 +93,7 @@ const ThreadsPool<func_type>& ThreadsPool<func_type>::operator+(std::function<fu
 template<typename func_type>
 ThreadsPool<func_type>::ThreadsPool()
 {
-	auto tread = std::make_shared<boost::thread>(&ThreadsPool::Start, this);
+	Start(poolSize);
 }
 
 
