@@ -29,7 +29,7 @@ void ThreadsPool<func_type>::Handler()
 		if (functionIt == functionMap.end())
 		{
 			taskLock.unlock();
-			return;
+			break;
 		}
 		auto functionPtr = functionIt->second;
 		functionMap.erase(functionIt);
