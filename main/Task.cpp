@@ -1,35 +1,39 @@
 #include "stdafx.h"
 #include "Task.h"
 
+#define SECOND_TASK_ITERATIONS 20
 
-
-void Task::FirstTask(int k, double s)
+void FirstTask(int numberOfPrints, double printValue)
 {
-	std::cout << "Two different argument!" << std::endl;
-	Sleep(3000);
-	std::cout << "Two different argument is ended!" << std::endl;
-}
- void Task::SecondTask()
-{
-	std::cout << "No arguments!" << std::endl;
-	Sleep(8000);
-	std::cout << "No arguments is ended!" << std::endl;
-
+    for (int i = 0; i < numberOfPrints; ++i)
+    {
+        std::cout << printValue << std::endl;
+    Sleep(1);
+    }
 }
 
- void Task::ThirdTask(int k, std::string u)
+ void SecondTask()
 {
-	std::cout << "And more!" << std::endl;
-	Sleep(8000);
-	std::cout << "And more is ended!" << std::endl;
-	return ;
+    for (int i = 0; i < SECOND_TASK_ITERATIONS; ++i)
+    {
+        std::cout << "Second" << std::endl;
+        Sleep(2);
+    }
 }
- void Task::FiveTask(int k, std::string u)
- {
-	 std::cout << "Five!" << std::endl;
-	 Sleep(10000);
-	 std::cout << "Five is ended!" << std::endl;
-	 return;
- }
 
-
+ void ThirdTask(int numberOfPrints, std::string printedString)
+{
+    for (int i = 0; i < numberOfPrints; ++i)
+    {
+        std::cout << printedString.c_str() << std::endl;
+        Sleep(3);
+    }
+}
+ void FouthTask(int numberOfPrints, std::string printedString)
+{
+    for (int i = 0; i < numberOfPrints; ++i)
+    {
+        std::cout << printedString.c_str() << std::endl;
+        Sleep(1);
+    }
+}
